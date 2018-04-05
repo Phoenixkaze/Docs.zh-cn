@@ -23,41 +23,41 @@ ASP.NET Core MVC 是使用“模型-视图-控制器”设计模式构建 Web �
 
 ## <a name="what-is-the-mvc-pattern"></a>什么是 MVC 模式？
 
-模型-视图-控制器 (MVC) 体系结构模式将应用程序分成 3 个主要组件组：模型、视图和控制器。 此模式有助于实现[关注点分离](http://deviq.com/separation-of-concerns/)。 使用此模式，用户请求被路由到控制器，后者负责使用模型来执行用户操作和/或检索查询结果。 控制器选择要显示给用户的视图，并为其提供所需的任何模型数据。
+模型-视图-控制器 (MVC) 体系结构模式将应用程序分成 3 个主要组件组：模型、视图和控制器。 此模式有助于实现[关注点分离](http://deviq.com/separation-of-concerns/)。 使用此模式时，用户的请求会被路由到负责操作模型来执行用户操作和/或检索查询结果的一个控制器。 控制器选择要显示给用户的视图，并为其提供所需的模型数据。
 
-下图显示 3 个主要组件及其相互引用关系：
+下图展示了 3 个主要组件及其相互引用关系：
 
 ![MVC 模式](overview/_static/mvc.png)
 
-这种责任划分有助于根据复杂性缩放应用程序，因为这更易于编码、调试和测试有单一作业（并遵循 [Single Responsibility Principle](http://deviq.com/single-responsibility-principle/)（单一责任原则））的某些内容（模型、视图或控制器）。 但这会加大更新、测试和调试代码的难度，该代码在这 3 个领域的两个或多个领域间存在依赖关系。 例如，用户界面逻辑的变更频率往往高于业务逻辑。 如果将表示代码和业务逻辑组合在单个对象中，则每次更改用户界面时都必须修改包含业务逻辑的对象。 这常常会引发错误，并且需要在每次进行细微的用户界面更改后重新测试业务逻辑。
+这种职责划分有助于根据复杂性伸缩应用程序，因为这更易于编码、调试和测试有单一作业（并遵循 [Single Responsibility Principle](http://deviq.com/single-responsibility-principle/)（单一职责原则））的某些内容（模型、视图或控制器）。 但这会加大更新、测试和调试代码的难度，该代码在这 3 个领域的两个或多个领域间存在依赖关系。 例如，用户界面逻辑的变更频率往往高于业务逻辑。 如果将表示代码和业务逻辑组合在单个对象中，则每次更改用户界面时都必须修改包含业务逻辑的对象。 这常常会引发错误，并且需要在每次进行细微的用户界面更改后重新测试业务逻辑。
 
 > [!NOTE]
 > 视图和控制器均依赖于模型。 但是，模型既不依赖于视图，也不依赖于控制器。 这是分离的一个关键优势。 这种分离允许模型独立于可视化展示进行构建和测试。
 
-### <a name="model-responsibilities"></a>模型责任
+### <a name="model-responsibilities"></a>模型的职责
 
 MVC 应用程序的模型 (M) 表示应用程序和任何应由其执行的业务逻辑或操作的状态。 业务逻辑应与保持应用程序状态的任何实现逻辑一起封装在模型中。 强类型视图通常使用 ViewModel 类型，旨在包含要在该视图上显示的数据。 控制器从模型创建并填充 ViewModel 实例。
 
 > [!NOTE]
 > 可通过多种方法在使用 MVC 体系结构模式的应用中组织模型。 详细了解某些[不同种类的模型类型](http://deviq.com/kinds-of-models/)。
 
-### <a name="view-responsibilities"></a>视图责任
+### <a name="view-responsibilities"></a>视图的职责
 
-视图 (V) 负责通过用户界面展示内容。 它们使用 [Razor 视图引擎](#razor-view-engine)在 HTML 标记中嵌入 .NET 代码。 视图中应该有最小逻辑，并且其中的任何逻辑都必须与展示内容相关。 如果发现需要在视图文件中执行大量逻辑以显示复杂模型中的数据，请考虑使用 [View Component](views/view-components.md)、ViewModel 或视图模板来简化视图。
+视图 (V) 负责通过用户界面展示内容。 它们使用 [Razor 视图引擎](#razor-view-engine)在 HTML 标记中嵌入 .NET 代码。 视图中应该有最小化的逻辑，并且其中的任何逻辑都必须与展示内容相关。 如果发现需要在视图文件中执行大量逻辑以显示复杂模型中的数据，请考虑使用 [View Component](views/view-components.md)、ViewModel 或视图模板来简化视图。
 
-### <a name="controller-responsibilities"></a>控制器职责
+### <a name="controller-responsibilities"></a>控制器的职责
 
-控制器 (C) 是处理用户交互、使用模型并最终选择要呈现的视图的组件。 在 MVC 应用程序中，视图仅显示信息；控制器处理并响应用户输入和交互。 在 MVC 模式中，控制器是初始入口点，负责选择要使用的模型类型和要呈现的视图（因此得名 - 它控制应用如何响应给定请求）。
+控制器 (C) 是处理用户交互、处理模型并最终选择要呈现的视图的组件。 在 MVC 应用程序中，视图仅显示信息；控制器处理并响应用户输入和交互。 在 MVC 模式中，控制器是初始入口点，负责选择要使用的模型类型和要呈现的视图（控制器因此得名 - 它控制应用如何响应给定请求）。
 
 > [!NOTE]
-> 控制器不应由于责任过多而变得过于复杂。 要阻止控制器逻辑变得过于复杂，请使用 [Single Responsibility Principle](http://deviq.com/single-responsibility-principle/)（单一责任原则）将业务逻辑推出控制器并推入域模型。
+> 控制器不应由于职责过多而变得过于复杂。 要避免控制器逻辑变得过于复杂，请使用 [Single Responsibility Principle](http://deviq.com/single-responsibility-principle/)（单一职责原则）将业务逻辑推出控制器并推入域模型。
 
 >[!TIP]
 > 如果发现控制器操作经常执行相同类型的操作，则可将这些常见操作移入[筛选器](#filters)，并遵守[“不要自我重复”原则](http://deviq.com/don-t-repeat-yourself/)。
 
 ## <a name="what-is-aspnet-core-mvc"></a>什么是 ASP.NET Core MVC
 
-ASP.NET Core MVC 框架是轻量级、开源、高度可测试的演示框架，并针对 ASP.NET Core 进行了优化。
+ASP.NET Core MVC 框架是轻量级、开源、高度可测试的呈现框架，并针对 ASP.NET Core 进行了优化。
 
 ASP.NET Core MVC 提供一种基于模式的方式，用于生成可彻底分开管理事务的动态网站。 它提供对标记的完全控制，支持 TDD 友好开发并使用最新的 Web 标准。
 
